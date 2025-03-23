@@ -1,0 +1,1581 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vulnerabilityAssessments_Default_storageContainerPath": {
+            "type": "SecureString"
+        },
+        "sites_msdocs_core_sql_ags_name": {
+            "defaultValue": "msdocs-core-sql-ags",
+            "type": "String"
+        },
+        "Redis_msdocs_core_sql_ags_cache_name": {
+            "defaultValue": "msdocs-core-sql-ags-cache",
+            "type": "String"
+        },
+        "vaults_ags_keyVault_tutorial_name": {
+            "defaultValue": "ags-keyVault-tutorial",
+            "type": "String"
+        },
+        "servers_msdocs_core_sql_ags_server_name": {
+            "defaultValue": "msdocs-core-sql-ags-server",
+            "type": "String"
+        },
+        "virtualNetworks_msdocs_core_sql_agsVnet_name": {
+            "defaultValue": "msdocs-core-sql-agsVnet",
+            "type": "String"
+        },
+        "serverfarms_ASP_agsmsdocscoresqltutorial_8f36_name": {
+            "defaultValue": "ASP-agsmsdocscoresqltutorial-8f36",
+            "type": "String"
+        },
+        "privateEndpoints_msdocs_core_sql_agsDbEndpoint_name": {
+            "defaultValue": "msdocs-core-sql-agsDbEndpoint",
+            "type": "String"
+        },
+        "privateDnsZones_privatelink_vaultcore_azure_net_name": {
+            "defaultValue": "privatelink.vaultcore.azure.net",
+            "type": "String"
+        },
+        "privateDnsZones_privatelink_database_windows_net_name": {
+            "defaultValue": "privatelink.database.windows.net",
+            "type": "String"
+        },
+        "privateEndpoints_msdocs_core_sql_XYZVvaultEndpoint_name": {
+            "defaultValue": "msdocs-core-sql-XYZVvaultEndpoint",
+            "type": "String"
+        },
+        "privateDnsZones_privatelink_redis_cache_windows_net_name": {
+            "defaultValue": "privatelink.redis.cache.windows.net",
+            "type": "String"
+        },
+        "userAssignedIdentities_msdocs_core_sql__id_bce5_name": {
+            "defaultValue": "msdocs-core-sql--id-bce5",
+            "type": "String"
+        },
+        "privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name": {
+            "defaultValue": "msdocs-core-sql-ags-cache-privateEndpoint",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Cache/Redis",
+            "apiVersion": "2024-11-01",
+            "name": "[parameters('Redis_msdocs_core_sql_ags_cache_name')]",
+            "location": "Canada Central",
+            "properties": {
+                "redisVersion": "6.0",
+                "sku": {
+                    "name": "Basic",
+                    "family": "C",
+                    "capacity": 0
+                },
+                "enableNonSslPort": false,
+                "minimumTlsVersion": "1.2",
+                "publicNetworkAccess": "Disabled",
+                "redisConfiguration": {
+                    "maxclients": "256",
+                    "maxmemory-reserved": "30",
+                    "maxfragmentationmemory-reserved": "30",
+                    "maxmemory-delta": "30"
+                },
+                "updateChannel": "Stable",
+                "disableAccessKeyAuthentication": false
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2024-12-01-preview",
+            "name": "[parameters('vaults_ags_keyVault_tutorial_name')]",
+            "location": "canadacentral",
+            "properties": {
+                "sku": {
+                    "family": "A",
+                    "name": "Standard"
+                },
+                "tenantId": "6de43ec0-2446-46b3-8e7a-713103bc65a9",
+                "networkAcls": {
+                    "bypass": "None",
+                    "defaultAction": "Deny",
+                    "ipRules": [
+                        {
+                            "value": "20.175.203.24/32"
+                        },
+                        {
+                            "value": "20.175.203.214/32"
+                        },
+                        {
+                            "value": "20.175.204.138/32"
+                        },
+                        {
+                            "value": "20.175.205.56/32"
+                        },
+                        {
+                            "value": "20.220.142.100/32"
+                        },
+                        {
+                            "value": "20.175.207.134/32"
+                        },
+                        {
+                            "value": "20.220.143.96/32"
+                        },
+                        {
+                            "value": "20.220.143.97/32"
+                        },
+                        {
+                            "value": "20.220.140.49/32"
+                        },
+                        {
+                            "value": "20.220.141.181/32"
+                        },
+                        {
+                            "value": "20.220.249.12/32"
+                        },
+                        {
+                            "value": "20.175.171.174/32"
+                        },
+                        {
+                            "value": "20.220.249.183/32"
+                        },
+                        {
+                            "value": "20.175.170.65/32"
+                        },
+                        {
+                            "value": "20.175.172.49/32"
+                        },
+                        {
+                            "value": "20.175.174.138/32"
+                        },
+                        {
+                            "value": "20.220.254.20/32"
+                        },
+                        {
+                            "value": "20.175.200.241/32"
+                        },
+                        {
+                            "value": "20.175.201.85/32"
+                        },
+                        {
+                            "value": "20.175.171.235/32"
+                        },
+                        {
+                            "value": "20.175.201.124/32"
+                        },
+                        {
+                            "value": "20.175.201.209/32"
+                        },
+                        {
+                            "value": "20.175.202.33/32"
+                        },
+                        {
+                            "value": "20.175.202.102/32"
+                        },
+                        {
+                            "value": "20.175.207.166/32"
+                        },
+                        {
+                            "value": "20.175.207.219/32"
+                        },
+                        {
+                            "value": "20.220.143.33/32"
+                        },
+                        {
+                            "value": "20.175.248.107/32"
+                        },
+                        {
+                            "value": "20.220.253.170/32"
+                        },
+                        {
+                            "value": "20.220.253.171/32"
+                        },
+                        {
+                            "value": "20.48.202.173/32"
+                        }
+                    ],
+                    "virtualNetworkRules": []
+                },
+                "accessPolicies": [],
+                "enabledForDeployment": false,
+                "enabledForDiskEncryption": false,
+                "enabledForTemplateDeployment": false,
+                "enableSoftDelete": true,
+                "softDeleteRetentionInDays": 90,
+                "enableRbacAuthorization": true,
+                "vaultUri": "https://ags-keyvault-tutorial.vault.azure.net/",
+                "provisioningState": "Succeeded",
+                "publicNetworkAccess": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2024-11-30",
+            "name": "[parameters('userAssignedIdentities_msdocs_core_sql__id_bce5_name')]",
+            "location": "canadacentral"
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2024-06-01",
+            "name": "[parameters('privateDnsZones_privatelink_database_windows_net_name')]",
+            "location": "global",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2024-06-01",
+            "name": "[parameters('privateDnsZones_privatelink_redis_cache_windows_net_name')]",
+            "location": "global",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2024-06-01",
+            "name": "[parameters('privateDnsZones_privatelink_vaultcore_azure_net_name')]",
+            "location": "global",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2024-05-01",
+            "name": "[parameters('virtualNetworks_msdocs_core_sql_agsVnet_name')]",
+            "location": "canadacentral",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "privateEndpointVNetPolicies": "Disabled",
+                "subnets": [
+                    {
+                        "name": "msdocs-core-sql-agsSubnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsSubnet')]",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/24",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    },
+                    {
+                        "name": "msdocs-core-sql-agsAppSubnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsAppSubnet')]",
+                        "properties": {
+                            "addressPrefix": "10.0.1.0/24",
+                            "serviceEndpoints": [],
+                            "delegations": [
+                                {
+                                    "name": "dlg-appServices",
+                                    "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsAppSubnet'), '/delegations/dlg-appServices')]",
+                                    "properties": {
+                                        "serviceName": "Microsoft.Web/serverfarms"
+                                    },
+                                    "type": "Microsoft.Network/virtualNetworks/subnets/delegations"
+                                }
+                            ],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[parameters('servers_msdocs_core_sql_ags_server_name')]",
+            "location": "canadacentral",
+            "kind": "v12.0",
+            "properties": {
+                "administratorLogin": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '-admin')]",
+                "version": "12.0",
+                "minimalTlsVersion": "None",
+                "publicNetworkAccess": "Enabled",
+                "restrictOutboundNetworkAccess": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2024-04-01",
+            "name": "[parameters('serverfarms_ASP_agsmsdocscoresqltutorial_8f36_name')]",
+            "location": "Canada Central",
+            "sku": {
+                "name": "B1",
+                "tier": "Basic",
+                "size": "B1",
+                "family": "B",
+                "capacity": 1
+            },
+            "kind": "linux",
+            "properties": {
+                "perSiteScaling": false,
+                "elasticScaleEnabled": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "freeOfferExpirationTime": "2025-04-21T08:26:46.86",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0,
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "Microsoft.Cache/Redis/accessPolicies",
+            "apiVersion": "2024-11-01",
+            "name": "[concat(parameters('Redis_msdocs_core_sql_ags_cache_name'), '/Data Contributor')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cache/Redis', parameters('Redis_msdocs_core_sql_ags_cache_name'))]"
+            ],
+            "properties": {
+                "permissions": "+@all -@dangerous +cluster|info +cluster|nodes +cluster|slots allkeys"
+            }
+        },
+        {
+            "type": "Microsoft.Cache/Redis/accessPolicies",
+            "apiVersion": "2024-11-01",
+            "name": "[concat(parameters('Redis_msdocs_core_sql_ags_cache_name'), '/Data Owner')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cache/Redis', parameters('Redis_msdocs_core_sql_ags_cache_name'))]"
+            ],
+            "properties": {
+                "permissions": "+@all allkeys"
+            }
+        },
+        {
+            "type": "Microsoft.Cache/Redis/accessPolicies",
+            "apiVersion": "2024-11-01",
+            "name": "[concat(parameters('Redis_msdocs_core_sql_ags_cache_name'), '/Data Reader')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cache/Redis', parameters('Redis_msdocs_core_sql_ags_cache_name'))]"
+            ],
+            "properties": {
+                "permissions": "+@read +@connection +cluster|info +cluster|nodes +cluster|slots allkeys"
+            }
+        },
+        {
+            "type": "Microsoft.Cache/Redis/privateEndpointConnections",
+            "apiVersion": "2024-11-01",
+            "name": "[concat(parameters('Redis_msdocs_core_sql_ags_cache_name'), '/', parameters('Redis_msdocs_core_sql_ags_cache_name'), '-privateEndpoint.a8ec0640-ea97-4353-a6c6-08855abe6f23')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cache/Redis', parameters('Redis_msdocs_core_sql_ags_cache_name'))]"
+            ],
+            "properties": {
+                "privateEndpoint": {},
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "description": "Auto-Approved",
+                    "actionsRequired": "None"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/privateEndpointConnections",
+            "apiVersion": "2024-12-01-preview",
+            "name": "[concat(parameters('vaults_ags_keyVault_tutorial_name'), '/msdocs-core-sql-XYZVvaultEndpoint_29513f6b-d481-4cd8-a195-05817667f014')]",
+            "location": "canadacentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_ags_keyVault_tutorial_name'))]"
+            ],
+            "properties": {
+                "provisioningState": "Succeeded",
+                "privateEndpoint": {},
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "actionsRequired": "None"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2024-12-01-preview",
+            "name": "[concat(parameters('vaults_ags_keyVault_tutorial_name'), '/azure-redis-connectionstring-1f2de')]",
+            "location": "canadacentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_ags_keyVault_tutorial_name'))]"
+            ],
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2024-12-01-preview",
+            "name": "[concat(parameters('vaults_ags_keyVault_tutorial_name'), '/azure-sql-connectionstring-5dcb0')]",
+            "location": "canadacentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_ags_keyVault_tutorial_name'))]"
+            ],
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities/federatedIdentityCredentials",
+            "apiVersion": "2024-11-30",
+            "name": "[concat(parameters('userAssignedIdentities_msdocs_core_sql__id_bce5_name'), '/alex-gras-msdocs-app-service-sqldb-dotnetcore-9028')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('userAssignedIdentities_msdocs_core_sql__id_bce5_name'))]"
+            ],
+            "properties": {
+                "issuer": "https://token.actions.githubusercontent.com",
+                "subject": "repo:alex-gras/msdocs-app-service-sqldb-dotnetcore:environment:Production",
+                "audiences": [
+                    "api://AzureADTokenExchange"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/A",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_vaultcore_azure_net_name'), '/ags-keyvault-tutorial')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_vaultcore_azure_net_name'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "aRecords": [
+                    {
+                        "ipv4Address": "10.0.0.6"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/A",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_redis_cache_windows_net_name'), '/msdocs-core-sql-ags-cache')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_redis_cache_windows_net_name'))]"
+            ],
+            "properties": {
+                "metadata": {
+                    "creator": "created by private endpoint msdocs-core-sql-ags-cache-privateEndpoint with resource guid 20dcc104-e684-4763-a62c-21c6e531ac16"
+                },
+                "ttl": 10,
+                "aRecords": [
+                    {
+                        "ipv4Address": "10.0.0.5"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/A",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_database_windows_net_name'), '/msdocs-core-sql-ags-server')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_database_windows_net_name'))]"
+            ],
+            "properties": {
+                "metadata": {
+                    "creator": "created by private endpoint msdocs-core-sql-agsDbEndpoint with resource guid ec3b1f0f-4a09-44cf-81da-be17d67aef8f"
+                },
+                "ttl": 10,
+                "aRecords": [
+                    {
+                        "ipv4Address": "10.0.0.4"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/SOA",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_database_windows_net_name'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_database_windows_net_name'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "soaRecord": {
+                    "email": "azureprivatedns-host.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "azureprivatedns.net",
+                    "minimumTtl": 10,
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/SOA",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_redis_cache_windows_net_name'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_redis_cache_windows_net_name'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "soaRecord": {
+                    "email": "azureprivatedns-host.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "azureprivatedns.net",
+                    "minimumTtl": 10,
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/SOA",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_vaultcore_azure_net_name'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_vaultcore_azure_net_name'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "soaRecord": {
+                    "email": "azureprivatedns-host.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "azureprivatedns.net",
+                    "minimumTtl": 10,
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2024-05-01",
+            "name": "[concat(parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), '/msdocs-core-sql-agsAppSubnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.1.0/24",
+                "serviceEndpoints": [],
+                "delegations": [
+                    {
+                        "name": "dlg-appServices",
+                        "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsAppSubnet'), '/delegations/dlg-appServices')]",
+                        "properties": {
+                            "serviceName": "Microsoft.Web/serverfarms"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets/delegations"
+                    }
+                ],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2024-05-01",
+            "name": "[concat(parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), '/msdocs-core-sql-agsSubnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "serviceEndpoints": [],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advancedThreatProtectionSettings",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advisors",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/CreateIndex')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "autoExecuteValue": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advisors",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/DbParameterization')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "autoExecuteValue": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advisors",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/DefragmentIndex')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "autoExecuteValue": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advisors",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/DropIndex')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "autoExecuteValue": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advisors",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/ForceLastGoodPlan')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "autoExecuteValue": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/auditingPolicies",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/Default')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "auditingState": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/auditingSettings",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "auditActionsAndGroups": [],
+                "isStorageSecondaryKeyInUse": false,
+                "isAzureMonitorTargetEnabled": false,
+                "isManagedIdentityInUse": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/connectionPolicies",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/default')]",
+            "location": "canadacentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "connectionType": "Default"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database')]",
+            "location": "canadacentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "sku": {
+                "name": "GP_S_Gen5",
+                "tier": "GeneralPurpose",
+                "family": "Gen5",
+                "capacity": 1
+            },
+            "kind": "v12.0,user,vcore,serverless",
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": 34359738368,
+                "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                "zoneRedundant": false,
+                "readScale": "Disabled",
+                "autoPauseDelay": 60,
+                "requestedBackupStorageRedundancy": "Geo",
+                "minCapacity": 0.5,
+                "maintenanceConfigurationId": "/subscriptions/c2cbe50f-e6f4-433e-9b22-de88363473aa/providers/Microsoft.Maintenance/publicMaintenanceConfigurations/SQL_Default",
+                "isLedgerOn": false,
+                "availabilityZone": "NoPreference"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/advancedThreatProtectionSettings",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/auditingPolicies",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/master/Default')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "auditingState": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/auditingSettings",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "isAzureMonitorTargetEnabled": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/extendedAuditingSettings",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "isAzureMonitorTargetEnabled": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/geoBackupPolicies",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/ledgerDigestUploads",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/master/Current')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/securityAlertPolicies",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled",
+                "disabledAlerts": [
+                    ""
+                ],
+                "emailAddresses": [
+                    ""
+                ],
+                "emailAccountAdmins": false,
+                "retentionDays": 0
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/master/Current')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/vulnerabilityAssessments",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "recurringScans": {
+                    "isEnabled": false,
+                    "emailSubscriptionAdmins": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/devOpsAuditingSettings",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "isAzureMonitorTargetEnabled": false,
+                "isManagedIdentityInUse": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/encryptionProtector",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/current')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "kind": "servicemanaged",
+            "properties": {
+                "serverKeyName": "ServiceManaged",
+                "serverKeyType": "ServiceManaged",
+                "autoRotationEnabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/extendedAuditingSettings",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "auditActionsAndGroups": [],
+                "isStorageSecondaryKeyInUse": false,
+                "isAzureMonitorTargetEnabled": false,
+                "isManagedIdentityInUse": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/firewallRules",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/AllowAllWindowsAzureIps')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "startIpAddress": "0.0.0.0",
+                "endIpAddress": "0.0.0.0"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/keys",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/ServiceManaged')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "kind": "servicemanaged",
+            "properties": {
+                "serverKeyType": "ServiceManaged"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/securityAlertPolicies",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled",
+                "disabledAlerts": [
+                    ""
+                ],
+                "emailAddresses": [
+                    ""
+                ],
+                "emailAccountAdmins": false,
+                "retentionDays": 0
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/sqlVulnerabilityAssessments",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/vulnerabilityAssessments",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "recurringScans": {
+                    "isEnabled": false,
+                    "emailSubscriptionAdmins": true
+                },
+                "storageContainerPath": "[parameters('vulnerabilityAssessments_Default_storageContainerPath')]"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2024-04-01",
+            "name": "[concat(parameters('sites_msdocs_core_sql_ags_name'), '/ftp')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_msdocs_core_sql_ags_name'))]"
+            ],
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2024-04-01",
+            "name": "[concat(parameters('sites_msdocs_core_sql_ags_name'), '/scm')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_msdocs_core_sql_ags_name'))]"
+            ],
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2024-04-01",
+            "name": "[concat(parameters('sites_msdocs_core_sql_ags_name'), '/web')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_msdocs_core_sql_ags_name'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "DOTNETCORE|8.0",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": true,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$msdocs-core-sql-ags",
+                "scmType": "GitHubAction",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetName": "83e976ce-2838-4c5b-9154-a40d9ff7beaa_msdocs-core-sql-agsAppSubnet",
+                "vnetRouteAllEnabled": true,
+                "vnetPrivatePortsCount": 0,
+                "localMySqlEnabled": false,
+                "managedServiceIdentityId": 3444,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 0,
+                "elasticWebAppScaleLimit": 0,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 0,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2024-04-01",
+            "name": "[concat(parameters('sites_msdocs_core_sql_ags_name'), '/5ad4bc72-afc7-46bb-b803-d3692e69445c')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_msdocs_core_sql_ags_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "OneDeploy",
+                "message": "OneDeploy",
+                "start_time": "2025-03-22T10:27:51.7373895Z",
+                "end_time": "2025-03-22T10:28:11.5466705Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2024-04-01",
+            "name": "[concat(parameters('sites_msdocs_core_sql_ags_name'), '/9da280b0-e2ab-44b7-a041-9c23e0b1baf3')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_msdocs_core_sql_ags_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "OneDeploy",
+                "message": "OneDeploy",
+                "start_time": "2025-03-22T10:31:58.3399463Z",
+                "end_time": "2025-03-22T10:32:22.8475812Z",
+                "active": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2024-04-01",
+            "name": "[concat(parameters('sites_msdocs_core_sql_ags_name'), '/9dec99a0-f9dd-4807-aa47-ca9279418c2c')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_msdocs_core_sql_ags_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "OneDeploy",
+                "message": "OneDeploy",
+                "start_time": "2025-03-22T09:57:39.3714529Z",
+                "end_time": "2025-03-22T09:57:59.268286Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2024-04-01",
+            "name": "[concat(parameters('sites_msdocs_core_sql_ags_name'), '/', parameters('sites_msdocs_core_sql_ags_name'), '-g6f4cmcpcpb4avc0.canadacentral-01.azurewebsites.net')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_msdocs_core_sql_ags_name'))]"
+            ],
+            "properties": {
+                "siteName": "msdocs-core-sql-ags",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_vaultcore_azure_net_name'), '/bkidarsho5jq6')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_vaultcore_azure_net_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "resolutionPolicy": "Default",
+                "virtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_database_windows_net_name'), '/', parameters('privateDnsZones_privatelink_database_windows_net_name'), '-dblink')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_database_windows_net_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "resolutionPolicy": "Default",
+                "virtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_redis_cache_windows_net_name'), '/', parameters('privateDnsZones_privatelink_redis_cache_windows_net_name'), '-applink')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_redis_cache_windows_net_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "resolutionPolicy": "Default",
+                "virtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2024-05-01",
+            "name": "[parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name')]",
+            "location": "canadacentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cache/Redis', parameters('Redis_msdocs_core_sql_ags_cache_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsSubnet')]"
+            ],
+            "properties": {
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name')]",
+                        "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name')))]",
+                        "properties": {
+                            "privateLinkServiceId": "[resourceId('Microsoft.Cache/Redis', parameters('Redis_msdocs_core_sql_ags_cache_name'))]",
+                            "groupIds": [
+                                "redisCache"
+                            ],
+                            "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "description": "Auto-Approved",
+                                "actionsRequired": "None"
+                            }
+                        }
+                    }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "subnet": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsSubnet')]"
+                },
+                "ipConfigurations": [],
+                "customDnsConfigs": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2024-05-01",
+            "name": "[parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name')]",
+            "location": "canadacentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsSubnet')]"
+            ],
+            "properties": {
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name')]",
+                        "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name')))]",
+                        "properties": {
+                            "privateLinkServiceId": "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]",
+                            "groupIds": [
+                                "sqlServer"
+                            ],
+                            "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "description": "Auto-approved",
+                                "actionsRequired": "None"
+                            }
+                        }
+                    }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "subnet": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsSubnet')]"
+                },
+                "ipConfigurations": [],
+                "customDnsConfigs": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2024-05-01",
+            "name": "[parameters('privateEndpoints_msdocs_core_sql_XYZVvaultEndpoint_name')]",
+            "location": "canadacentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_ags_keyVault_tutorial_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsSubnet')]"
+            ],
+            "properties": {
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[concat(parameters('privateEndpoints_msdocs_core_sql_XYZVvaultEndpoint_name'), '_29513f6b-d481-4cd8-a195-05817667f014')]",
+                        "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_msdocs_core_sql_XYZVvaultEndpoint_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_msdocs_core_sql_XYZVvaultEndpoint_name'), '_29513f6b-d481-4cd8-a195-05817667f014'))]",
+                        "properties": {
+                            "privateLinkServiceId": "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_ags_keyVault_tutorial_name'))]",
+                            "groupIds": [
+                                "vault"
+                            ],
+                            "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "actionsRequired": "None"
+                            }
+                        }
+                    }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "subnet": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsSubnet')]"
+                },
+                "ipConfigurations": [],
+                "customDnsConfigs": [
+                    {
+                        "fqdn": "ags-keyvault-tutorial.vault.azure.net",
+                        "ipAddresses": [
+                            "10.0.0.6"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "apiVersion": "2024-05-01",
+            "name": "[concat(parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name'))]",
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_redis_cache_windows_net_name'))]"
+            ],
+            "properties": {
+                "privateDnsZoneConfigs": [
+                    {
+                        "name": "privatelink-redis-cache-windows-net",
+                        "properties": {
+                            "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_redis_cache_windows_net_name'))]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "apiVersion": "2024-05-01",
+            "name": "[concat(parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name'))]",
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_database_windows_net_name'))]"
+            ],
+            "properties": {
+                "privateDnsZoneConfigs": [
+                    {
+                        "name": "database-config",
+                        "properties": {
+                            "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_database_windows_net_name'))]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/advancedThreatProtectionSettings",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/auditingPolicies",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/Default')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "auditingState": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/auditingSettings",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "isAzureMonitorTargetEnabled": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/backupLongTermRetentionPolicies",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "weeklyRetention": "PT0S",
+                "monthlyRetention": "PT0S",
+                "yearlyRetention": "PT0S",
+                "weekOfYear": 0
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/backupShortTermRetentionPolicies",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 7,
+                "diffBackupIntervalInHours": 12
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/extendedAuditingSettings",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "isAzureMonitorTargetEnabled": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/geoBackupPolicies",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/ledgerDigestUploads",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/Current')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/securityAlertPolicies",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled",
+                "disabledAlerts": [
+                    ""
+                ],
+                "emailAddresses": [
+                    ""
+                ],
+                "emailAccountAdmins": false,
+                "retentionDays": 0
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/Current')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "state": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/vulnerabilityAssessments",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-ags-database/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_msdocs_core_sql_ags_server_name'), 'msdocs-core-sql-ags-database')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]"
+            ],
+            "properties": {
+                "recurringScans": {
+                    "isEnabled": false,
+                    "emailSubscriptionAdmins": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/privateEndpointConnections",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('servers_msdocs_core_sql_ags_server_name'), '/msdocs-core-sql-agsDbEndpoint-1a8e3584-a71a-4e3e-882d-12d62abdb65b')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]",
+                "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name'))]"
+            ],
+            "properties": {
+                "privateEndpoint": {
+                    "id": "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name'))]"
+                },
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "description": "Auto-approved"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2024-04-01",
+            "name": "[parameters('sites_msdocs_core_sql_ags_name')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ASP_agsmsdocscoresqltutorial_8f36_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsAppSubnet')]"
+            ],
+            "kind": "app,linux",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_msdocs_core_sql_ags_name'), '-g6f4cmcpcpb4avc0.canadacentral-01.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_msdocs_core_sql_ags_name'), '-g6f4cmcpcpb4avc0.scm.canadacentral-01.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ASP_agsmsdocscoresqltutorial_8f36_name'))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "dnsConfiguration": {},
+                "vnetRouteAllEnabled": true,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "DOTNETCORE|8.0",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "ipMode": "IPv4",
+                "vnetBackupRestoreEnabled": false,
+                "customDomainVerificationId": "E22E297C8AE7E9FC24096C62075277F2889474FD299678F5F910FC1635E198C5",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "endToEndEncryptionEnabled": false,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), concat(parameters('sites_msdocs_core_sql_ags_name'), 'AppSubnet'))]",
+                "keyVaultReferenceIdentity": "SystemAssigned",
+                "autoGeneratedDomainNameLabelScope": "TenantReuse"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/virtualNetworkConnections",
+            "apiVersion": "2024-04-01",
+            "name": "[concat(parameters('sites_msdocs_core_sql_ags_name'), '/83e976ce-2838-4c5b-9154-a40d9ff7beaa_', parameters('sites_msdocs_core_sql_ags_name'), 'AppSubnet')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_msdocs_core_sql_ags_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsAppSubnet')]"
+            ],
+            "properties": {
+                "vnetResourceId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_msdocs_core_sql_agsVnet_name'), 'msdocs-core-sql-agsAppSubnet')]",
+                "isSwift": true
+            }
+        }
+    ]
+}
