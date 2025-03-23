@@ -1,6 +1,6 @@
 {
-    "itemDisplayName": "Web App with SQL Database Privat OK",
-    "description": "This template creates an Azure Web App with Azure SQL Database.",
+    "itemDisplayName": "Web App with PostgresSQL Database Privat OK",
+    "description": "This template creates an Azure Web App with Azure PostgreSQL Database.",
     "githubUsername": "AlexGras",
-    "summary": "Deploys an Azure Web App with a SQL database as an environment in a DevTest Lab."
+    "summary": "Deploys an Azure Web App with a postgreSQL database as an environment in a DevTest Lab."
   }

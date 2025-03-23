@@ -20,8 +20,12 @@
         "hostingPlanName": "[toLower(concat(variables('resourceNamePrefix'), '-', take(uniqueString(resourceGroup().id), 6), '-sp'))]",
         "siteName": "[toLower(concat(variables('resourceNamePrefix'), '-', take(uniqueString(resourceGroup().id), 6)))]",
         "serverName": "[toLower(concat(variables('resourceNamePrefix'), '-', take(uniqueString(resourceGroup().id), 6), '-db'))]",
-        "databaseName": "[concat('db', uniqueString(resourceGroup().id, variables('siteName')))]",
-        "databaseVersion": "12.0"
+        "databaseName": "[concat('db', uniqueString(resourceGroup().id, variables('siteName')))]",        
+        "databaseVersion": "9.6",
+        "databaseDTU": 2,
+        "databaseSkuName": "GP_Gen5_2",
+        "databaseSkuSizeMB": 51200,
+        "databaseSkuTier": "GeneralPurpose"
     },
     "resources": [
         {
@@ -55,42 +59,64 @@
             }
         },
         {
-            "name": "[variables('serverName')]",
-            "type": "Microsoft.Sql/servers",
-            "apiVersion": "2014-04-01",
+            "name": "[concat(variables('siteName'), '/connectionstrings')]",
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2015-04-01",
             "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]"
+            ],
             "properties": {
+                "defaultConnection": {
+                    "value": "[concat('Database=', variables('databaseName'), ';Data Source=', variables('serverName'), '.postgresql.database.azure.com;User Id=', parameters('Database Administrator Login'),'@', variables('serverName'),';Password=', parameters('Database Administrator Login Password'))]",
+                    "type": "PostgreSQL"
+                }
+            }
+        },
+        {
+            "name": "[variables('serverName')]",
+            "type": "Microsoft.DBforPostgreSQL/servers",
+            "apiVersion": "2017-12-01",
+            "location": "[resourceGroup().location]",
+            "kind": "",
+            "properties": {
+                "version": "[variables('databaseVersion')]",
                 "administratorLogin": "[parameters('Database Administrator Login')]",
                 "administratorLoginPassword": "[parameters('Database Administrator Login Password')]",
-                "version": "[variables('databaseVersion')]"
+                "storageMB": "[variables('databaseSkuSizeMB')]"
+            },
+            "sku": {
+                "name": "[variables('databaseSkuName')]",
+                "tier": "[variables('databaseSkuTier')]",
+                "capacity": "[variables('databaseDTU')]",
+                "size": "[variables('databaseSkuSizeMB')]",
+                "family": "Gen5"
             },
             "resources": [
                 {
-                    "name": "[variables('databaseName')]",
-                    "type": "databases",
-                    "apiVersion": "2015-01-01",
+                    "name": "[concat(variables('serverName'),'-firewall')]",
+                    "type": "firewallrules",
+                    "apiVersion": "2017-12-01",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[variables('serverName')]"
+                        "[concat('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))]"
                     ],
                     "properties": {
-                        "edition": "Basic",
-                        "collation": "SQL_Latin1_General_CP1_CI_AS",
-                        "maxSizeBytes": "1073741824",
-                        "requestedServiceObjectiveName": "Basic"
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "255.255.255.255"
                     }
                 },
                 {
-                    "type": "firewallrules",
-                    "apiVersion": "2014-04-01",
-                    "dependsOn": [
-                        "[variables('serverName')]"
-                    ],
+                    "name": "[variables('databaseName')]",
+                    "type": "databases",
+                    "apiVersion": "2017-12-01",
                     "location": "[resourceGroup().location]",
-                    "name": "AllowAllWindowsAzureIps",
+                    "dependsOn": [
+                        "[concat('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))]"
+                    ],
                     "properties": {
-                        "endIpAddress": "0.0.0.0",
-                        "startIpAddress": "0.0.0.0"
+                        "charset": "utf8",
+                        "collation":"English_United States.1252"
                     }
                 }
             ]
