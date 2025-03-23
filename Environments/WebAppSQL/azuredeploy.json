@@ -63,7 +63,7 @@
         {
             "type": "Microsoft.Cache/Redis",
             "apiVersion": "2024-11-01",
-            "name": "[azuredeploy.parameters('Redis_msdocs_core_sql_ags_cache_name')]",
+            "name": "[parameters('Redis_msdocs_core_sql_ags_cache_name')]",
             "location": "Canada Central",
             "properties": {
                 "redisVersion": "6.0",
@@ -88,7 +88,7 @@
         {
             "type": "Microsoft.KeyVault/vaults",
             "apiVersion": "2024-12-01-preview",
-            "name": "[azuredeploy.parameters('vaults_ags_keyVault_tutorial_name')]",
+            "name": "[parameters('vaults_ags_keyVault_tutorial_name')]",
             "location": "canadacentral",
             "properties": {
                 "sku": {
@@ -211,34 +211,34 @@
         {
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
             "apiVersion": "2024-11-30",
-            "name": "[azuredeploy.parameters('userAssignedIdentities_msdocs_core_sql__id_bce5_name')]",
+            "name": "[parameters('userAssignedIdentities_msdocs_core_sql__id_bce5_name')]",
             "location": "canadacentral"
         },
         {
             "type": "Microsoft.Network/privateDnsZones",
             "apiVersion": "2024-06-01",
-            "name": "[azuredeploy.parameters('privateDnsZones_privatelink_database_windows_net_name')]",
+            "name": "[parameters('privateDnsZones_privatelink_database_windows_net_name')]",
             "location": "global",
             "properties": {}
         },
         {
             "type": "Microsoft.Network/privateDnsZones",
             "apiVersion": "2024-06-01",
-            "name": "[azuredeploy.parameters('privateDnsZones_privatelink_redis_cache_windows_net_name')]",
+            "name": "[parameters('privateDnsZones_privatelink_redis_cache_windows_net_name')]",
             "location": "global",
             "properties": {}
         },
         {
             "type": "Microsoft.Network/privateDnsZones",
             "apiVersion": "2024-06-01",
-            "name": "[azuredeploy.parameters('privateDnsZones_privatelink_vaultcore_azure_net_name')]",
+            "name": "[parameters('privateDnsZones_privatelink_vaultcore_azure_net_name')]",
             "location": "global",
             "properties": {}
         },
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2024-05-01",
-            "name": "[azuredeploy.parameters('virtualNetworks_msdocs_core_sql_agsVnet_name')]",
+            "name": "[parameters('virtualNetworks_msdocs_core_sql_agsVnet_name')]",
             "location": "canadacentral",
             "properties": {
                 "addressSpace": {
@@ -289,7 +289,7 @@
         {
             "type": "Microsoft.Sql/servers",
             "apiVersion": "2024-05-01-preview",
-            "name": "[azuredeploy.parameters('servers_msdocs_core_sql_ags_server_name')]",
+            "name": "[parameters('servers_msdocs_core_sql_ags_server_name')]",
             "location": "canadacentral",
             "kind": "v12.0",
             "properties": {
@@ -303,7 +303,7 @@
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2024-04-01",
-            "name": "[azuredeploy.parameters('serverfarms_ASP_agsmsdocscoresqltutorial_8f36_name')]",
+            "name": "[parameters('serverfarms_ASP_agsmsdocscoresqltutorial_8f36_name')]",
             "location": "Canada Central",
             "sku": {
                 "name": "B1",
@@ -951,7 +951,7 @@
                     "isEnabled": false,
                     "emailSubscriptionAdmins": true
                 },
-                "storageContainerPath": "[azuredeploy.parameters('vulnerabilityAssessments_Default_storageContainerPath')]"
+                "storageContainerPath": "[parameters('vulnerabilityAssessments_Default_storageContainerPath')]"
             }
         },
         {
@@ -1184,7 +1184,7 @@
         {
             "type": "Microsoft.Network/privateEndpoints",
             "apiVersion": "2024-05-01",
-            "name": "[azuredeploy.parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name')]",
+            "name": "[parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name')]",
             "location": "canadacentral",
             "dependsOn": [
                 "[resourceId('Microsoft.Cache/Redis', parameters('Redis_msdocs_core_sql_ags_cache_name'))]",
@@ -1193,7 +1193,7 @@
             "properties": {
                 "privateLinkServiceConnections": [
                     {
-                        "name": "[azuredeploy.parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name')]",
+                        "name": "[parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name')]",
                         "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_msdocs_core_sql_ags_cache_privateEndpoint_name')))]",
                         "properties": {
                             "privateLinkServiceId": "[resourceId('Microsoft.Cache/Redis', parameters('Redis_msdocs_core_sql_ags_cache_name'))]",
@@ -1219,7 +1219,7 @@
         {
             "type": "Microsoft.Network/privateEndpoints",
             "apiVersion": "2024-05-01",
-            "name": "[azuredeploy.parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name')]",
+            "name": "[parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name')]",
             "location": "canadacentral",
             "dependsOn": [
                 "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]",
@@ -1228,7 +1228,7 @@
             "properties": {
                 "privateLinkServiceConnections": [
                     {
-                        "name": "[azuredeploy.parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name')]",
+                        "name": "[parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name')]",
                         "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_msdocs_core_sql_agsDbEndpoint_name')))]",
                         "properties": {
                             "privateLinkServiceId": "[resourceId('Microsoft.Sql/servers', parameters('servers_msdocs_core_sql_ags_server_name'))]",
@@ -1254,7 +1254,7 @@
         {
             "type": "Microsoft.Network/privateEndpoints",
             "apiVersion": "2024-05-01",
-            "name": "[azuredeploy.parameters('privateEndpoints_msdocs_core_sql_XYZVvaultEndpoint_name')]",
+            "name": "[parameters('privateEndpoints_msdocs_core_sql_XYZVvaultEndpoint_name')]",
             "location": "canadacentral",
             "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_ags_keyVault_tutorial_name'))]",
@@ -1503,7 +1503,7 @@
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2024-04-01",
-            "name": "[azuredeploy.parameters('sites_msdocs_core_sql_ags_name')]",
+            "name": "[parameters('sites_msdocs_core_sql_ags_name')]",
             "location": "Canada Central",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ASP_agsmsdocscoresqltutorial_8f36_name'))]",
